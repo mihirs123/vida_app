@@ -1,72 +1,100 @@
 package com.example.myfirstapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+
+
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
-    private TextView textViewLatitude,textViewLongitude;
+    private TextView textViewLatitude, textViewLongitude;
     private Button button2;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private EditText txtMobile;
+    private EditText txtMessage;
+    private Button btnSms;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textViewLatitude=findViewById(R.id.latitude);
-        textViewLongitude=findViewById(R.id.longitude);
-        button2=findViewById(R.id.button2);
-       fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
+        textViewLatitude = findViewById(R.id.latitude);
+        textViewLongitude = findViewById(R.id.longitude);
+        button2 = findViewById(R.id.button2);
+        txtMobile = findViewById(R.id.mblTxt);
+        txtMessage = findViewById(R.id.msgTxt);
+        btnSms = findViewById(R.id.btnSend);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
-        if(ContextCompat.checkSelfPermission( MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
+
+        btnSms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(txtMobile.getText().toString(),null, textViewLatitude.getText().toString(),null,null);
+                    smsManager.sendTextMessage(txtMobile.getText().toString(),null,textViewLongitude.getText().toString(),null,null);
+                    
+                    Toast.makeText(MainActivity.this, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e){
+                    Toast.makeText(MainActivity.this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         justCallButton2();
-        }
+    }
 
     private void justCallButton2() {
         button2.setOnClickListener(new View.OnClickListener() {
 
 
-                                      @Override
-                                      public void onClick(View view) {
-                           fusedLocationProviderClient.getLastLocation().addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
-                                       @Override
-                                       public void onSuccess(Location location) {
-                                           if(location!=null) {
-                                               textViewLatitude.setText(String.valueOf(location.getLatitude()));
-                                               textViewLongitude.setText(String.valueOf(location.getLongitude()));
-                                           }
-                                           else {
-                                               textViewLongitude.setText("null");
-                                               textViewLatitude.setText("null");
-                                           }
-                                       }
+            @Override
+            public void onClick(View view) {
+                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if (location != null) {
+                                    textViewLatitude.setText(String.valueOf(location.getLatitude()));
+                                    textViewLongitude.setText(String.valueOf(location.getLongitude()));
+                                } else {
+                                    textViewLongitude.setText("null");
+                                    textViewLatitude.setText("null");
+                                }
+                            }
 
-                                   }
-                           );
-                                      }
-
+                        }
+                );
+            }
 
 
-    });
+        });
 
     }
+
     public void sendMessage(View view) {
         Intent intent = new Intent(this, DisplayMessageActivity.class);
         EditText editText = (EditText) findViewById(R.id.editText);
@@ -75,4 +103,5 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 }
+
 
