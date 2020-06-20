@@ -39,10 +39,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         textViewLatitude = findViewById(R.id.latitude);
         textViewLongitude = findViewById(R.id.longitude);
+        
         button2 = findViewById(R.id.button2);
         txtMobile = findViewById(R.id.mblTxt);
         txtMessage = findViewById(R.id.msgTxt);
         btnSms = findViewById(R.id.btnSend);
+        String strlat= new String;
+        String strlon=new String;
+        String loclink=new String;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
@@ -53,10 +57,16 @@ public class MainActivity extends AppCompatActivity {
         btnSms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                
+             
                 try{
                     SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(txtMobile.getText().toString(),null, textViewLatitude.getText().toString(),null,null);
-                    smsManager.sendTextMessage(txtMobile.getText().toString(),null,textViewLongitude.getText().toString(),null,null);
+                    strlat=textViewLatitude.getText();
+                    strlon=textViewLongitude.getText();
+                    loclink="http://maps.google.com/maps?q=" + strlat + "," + strlon;
+                    l
+                    smsManager.sendTextMessage(txtMobile.getText().toString(),null, loclink.toString(),null,null);
+                   // smsManager.sendTextMessage(txtMobile.getText().toString(),null,textViewLongitude.getText().toString(),null,null);
                     
                     Toast.makeText(MainActivity.this, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
                 }
