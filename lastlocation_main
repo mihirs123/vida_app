@@ -79,11 +79,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void justCallButton2() {
-        button2.setOnClickListener(new View.OnClickListener() {
+       
 
 
-            @Override
-            public void onClick(View view) {
+           
                 fusedLocationProviderClient.getLastLocation().addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
                             @Override
                             public void onSuccess(Location location) {
@@ -98,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                 );
-            }
+            
 
 
-        });
+        }
 
     }
 
