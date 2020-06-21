@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     static final int STATE_CONNECTION_FAILED=4;
     static final int STATE_MESSAGE_RECEIVED=5;
     public static final String EXTRA_MESSAGE = "com.example.vidaapp.MESSAGE";
-    Intent intent = new Intent(this, nextactivity.class);
+
 
 
     @Override
@@ -86,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
 
         buttonshowmethod();
         stat.setText(signal);
+
+
+
 
     }
 
@@ -144,11 +148,13 @@ public class MainActivity extends AppCompatActivity {
                 case STATE_LISTENING:
                 {
                     stat.setText("listening");
+
                     break;
                 }
                 case STATE_CONNECTING:
                 {
                     stat.setText("connecting");
+
                     break;
                 }
                 case STATE_CONNECTED:
@@ -167,7 +173,19 @@ public class MainActivity extends AppCompatActivity {
                     String tempmag=new String(readbuffer,0,msg.arg1);
                     textview.setText(tempmag);
                     signal=tempmag;
+                    stat.setText(signal);
+                    
+                        try {
+                            SmsManager smgr = SmsManager.getDefault();
+                            smgr.sendTextMessage("9403468717".toString(), null, "hii".toString(), null, null);
+                            Toast.makeText(MainActivity.this, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(MainActivity.this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
+                        }
 
+
+
+                    
 
 
 
@@ -214,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
                     message.what=STATE_CONNECTING;
                     handler.sendMessage(message);
                     socket=serverSocket.accept();
+
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -332,4 +351,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
 }
+
