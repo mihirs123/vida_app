@@ -196,9 +196,11 @@ public class MainActivity extends AppCompatActivity {
                     String strlat= new String();
                     String strlon=new String();
                     String loclink=new String();
+                    String alert= new String();
                     strlat=textViewLatitude.getText().toString();
                     strlon=textViewLongitude.getText().toString();
-                    loclink="http://maps.google.com/maps?q=" + strlat + "," + strlon;
+                    alert="ALERT!!An accident has happened close to the area of your hospital.";
+                            loclink=alert + " http://maps.google.com/maps?q=" + strlat + "," + strlon;
 
                     try {
                         SmsManager smgr = SmsManager.getDefault();
